@@ -1,35 +1,33 @@
 name: Todo App CI
-
 on:
   push:
+    branches:
+      - main
+  pull_request: # Recommended: Also run tests on PRs to main
     branches:
       - main
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Repo code checkout
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Step 2: Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
+          cache: 'npm' # Added: Caches dependencies for faster runs
 
-      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Run tests
       - name: Run tests
         run: npm test
 
-      # Step 5: Fake deploy
       - name: Fake deploy
+        if: success() # Only runs if tests pass
         run: |
           echo "Starting deployment..."
           sleep 2
